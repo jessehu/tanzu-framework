@@ -22,21 +22,18 @@ func setupConfigData() (string, string, string, string) {
           manifestPath: test-manifest-path
           annotation: one
           required: true
-        contextType: tmc
       - gcp:
           name: test2
           bucket: test-bucket2
           manifestPath: test-manifest-path2
           annotation: one
           required: true
-        contextType: tmc
       - local:
           name: test-local
           bucket: test-bucket2
           manifestPath: test-manifest-path2
           annotation: one
           required: true
-        contextType: tmc
 servers:
   - name: test-mc
     type: managementcluster
@@ -71,18 +68,15 @@ currentContext:
                 bucket: updated-test-bucket
                 manifestPath: updated-test-manifest-path
                 annotation: one
-              contextType: tmc
             - gcp:
                 name: test2
                 bucket: test-bucket2
                 manifestPath: test-manifest-path2
                 annotation: one
                 required: true
-              contextType: tmc
             - oci:
                 name: test-local
                 image: test-local-image-path
-              contextType: tmc
 servers:
     - name: test-mc
       type: managementcluster
@@ -195,7 +189,6 @@ func TestIntegrationWithReplacePatchStrategy(t *testing.T) {
 				Bucket:       "test-bucket",
 				ManifestPath: "test-manifest-path",
 			},
-			ContextType: configapi.CtxTypeTMC,
 		},
 		{
 			GCP: &configapi.GCPDiscovery{
@@ -203,13 +196,11 @@ func TestIntegrationWithReplacePatchStrategy(t *testing.T) {
 				Bucket:       "test-bucket2",
 				ManifestPath: "test-manifest-path2",
 			},
-			ContextType: configapi.CtxTypeTMC,
 		},
 		{
 			Local: &configapi.LocalDiscovery{
 				Name: "test-local",
 			},
-			ContextType: configapi.CtxTypeTMC,
 		},
 	}
 
@@ -224,7 +215,6 @@ func TestIntegrationWithReplacePatchStrategy(t *testing.T) {
 			Bucket:       "test-bucket",
 			ManifestPath: "test-manifest-path",
 		},
-		ContextType: configapi.CtxTypeTMC,
 	}
 
 	source, err := GetCLIDiscoverySource("test")
@@ -239,14 +229,12 @@ func TestIntegrationWithReplacePatchStrategy(t *testing.T) {
 				Bucket:       "updated-test-bucket",
 				ManifestPath: "updated-test-manifest-path",
 			},
-			ContextType: configapi.CtxTypeTMC,
 		},
 		{
 			OCI: &configapi.OCIDiscovery{
 				Name:  "test-local",
 				Image: "test-local-image-path",
 			},
-			ContextType: configapi.CtxTypeTMC,
 		},
 	}
 

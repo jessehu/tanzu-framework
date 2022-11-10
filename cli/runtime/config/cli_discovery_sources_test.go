@@ -73,7 +73,6 @@ func TestGetCLIDiscoverySources(t *testing.T) {
 									Bucket:       "updated-test-bucket",
 									ManifestPath: "test-manifest-path",
 								},
-								ContextType: configapi.CtxTypeTMC,
 							},
 						},
 					},
@@ -86,7 +85,6 @@ func TestGetCLIDiscoverySources(t *testing.T) {
 						Bucket:       "updated-test-bucket",
 						ManifestPath: "test-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 		},
@@ -162,7 +160,6 @@ func TestGetCLIDiscoverySource(t *testing.T) {
 									Bucket:       "updated-test-bucket",
 									ManifestPath: "test-manifest-path",
 								},
-								ContextType: configapi.CtxTypeTMC,
 							},
 						},
 					},
@@ -174,7 +171,6 @@ func TestGetCLIDiscoverySource(t *testing.T) {
 					Bucket:       "updated-test-bucket",
 					ManifestPath: "test-manifest-path",
 				},
-				ContextType: configapi.CtxTypeTMC,
 			},
 		},
 	}
@@ -246,7 +242,6 @@ func TestSetCLIDiscoverySources(t *testing.T) {
 						Bucket:       "test-bucket",
 						ManifestPath: "test-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
@@ -291,7 +286,6 @@ func TestSetCLIDiscoverySources(t *testing.T) {
 						Bucket:       "test-updated-bucket",
 						ManifestPath: "test-updated-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			total: 3,
@@ -305,7 +299,6 @@ func TestSetCLIDiscoverySources(t *testing.T) {
 						Bucket:       "test-updated-bucket",
 						ManifestPath: "test-updated-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			total: 3,
@@ -319,7 +312,6 @@ func TestSetCLIDiscoverySources(t *testing.T) {
 						Bucket:       "test-bucket",
 						ManifestPath: "test-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			total: 3,
@@ -333,7 +325,6 @@ func TestSetCLIDiscoverySources(t *testing.T) {
 						Bucket:       "test-bucket",
 						ManifestPath: "test-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			total: 4,
@@ -346,7 +337,6 @@ func TestSetCLIDiscoverySources(t *testing.T) {
 						Name: "default-local",
 						Path: "test-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			total: 4,
@@ -438,7 +428,6 @@ func TestDeleteCLIDiscoverySource(t *testing.T) {
 									Bucket:       "test-bucket",
 									ManifestPath: "test-manifest-path",
 								},
-								ContextType: configapi.CtxTypeTMC,
 							},
 						},
 					},
@@ -460,7 +449,6 @@ func TestDeleteCLIDiscoverySource(t *testing.T) {
 									Bucket:       "test-bucket",
 									ManifestPath: "test-manifest-path",
 								},
-								ContextType: configapi.CtxTypeTMC,
 							},
 						},
 					},
@@ -481,7 +469,6 @@ func TestDeleteCLIDiscoverySource(t *testing.T) {
 									Bucket:       "test-bucket",
 									ManifestPath: "test-manifest-path",
 								},
-								ContextType: configapi.CtxTypeTMC,
 							},
 							{
 								GCP: &configapi.GCPDiscovery{
@@ -489,7 +476,6 @@ func TestDeleteCLIDiscoverySource(t *testing.T) {
 									Bucket:       "test-bucket2",
 									ManifestPath: "test-manifest-path2",
 								},
-								ContextType: configapi.CtxTypeTMC,
 							},
 						},
 					},
@@ -563,7 +549,6 @@ func TestIntegrationSetGetDeleteCLIDiscoverySource(t *testing.T) {
 				Bucket:       "test-bucket",
 				ManifestPath: "test-manifest-path",
 			},
-			ContextType: configapi.CtxTypeTMC,
 		},
 	}
 
@@ -659,14 +644,12 @@ func TestSetCLIDiscoverySourceLocalMulti(t *testing.T) {
 			Name: "default-local",
 			Path: "standalone",
 		},
-		ContextType: "k8s",
 	}
 	updateInput2 := configapi.PluginDiscovery{
 		Local: &configapi.LocalDiscovery{
 			Name: "default-local",
 			Path: "standalone-updated",
 		},
-		ContextType: "k8s",
 	}
 
 	// Actions
@@ -747,7 +730,6 @@ func TestSetCLIDiscoverySourceWithDefaultAndDefaultLocal(t *testing.T) {
 						Bucket:       "default-test-bucket",
 						ManifestPath: "default-test-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			totalSources: 1,
@@ -761,7 +743,6 @@ func TestSetCLIDiscoverySourceWithDefaultAndDefaultLocal(t *testing.T) {
 						Bucket:       "default-test-bucket",
 						ManifestPath: "default-test-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			totalSources: 2,
@@ -775,7 +756,6 @@ func TestSetCLIDiscoverySourceWithDefaultAndDefaultLocal(t *testing.T) {
 						Bucket:       "test-bucket",
 						ManifestPath: "test-manifest-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 
@@ -790,7 +770,6 @@ func TestSetCLIDiscoverySourceWithDefaultAndDefaultLocal(t *testing.T) {
 						Bucket:       "default-test-bucket-updated",
 						ManifestPath: "default-test-manifest-path-updated",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 
@@ -805,7 +784,6 @@ func TestSetCLIDiscoverySourceWithDefaultAndDefaultLocal(t *testing.T) {
 						Bucket:       "default-test-bucket-updated",
 						ManifestPath: "default-test-manifest-path-updated",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 
@@ -820,21 +798,18 @@ func TestSetCLIDiscoverySourceWithDefaultAndDefaultLocal(t *testing.T) {
 						Bucket:       "default-test-bucket-updated",
 						ManifestPath: "default-test-manifest-path-updated",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
 						Name: "test-local",
 						Path: "test-local-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
 						Name: "default",
 						Path: "default-local-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					GCP: &configapi.GCPDiscovery{
@@ -842,7 +817,6 @@ func TestSetCLIDiscoverySourceWithDefaultAndDefaultLocal(t *testing.T) {
 						Bucket:       "default-test-bucket-updated2",
 						ManifestPath: "default-test-manifest-path-updated2",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					GCP: &configapi.GCPDiscovery{
@@ -850,21 +824,18 @@ func TestSetCLIDiscoverySourceWithDefaultAndDefaultLocal(t *testing.T) {
 						Bucket:       "test-bucket-updated",
 						ManifestPath: "test-manifest-path-updated",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
 						Name: "default-local",
 						Path: "default-local-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
 						Name: "test-gcp1",
 						Path: "default-local-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			totalSources: 5,
@@ -944,21 +915,18 @@ func TestSetCLIDiscoverySourceMultiTypes(t *testing.T) {
 						Bucket:       "default-test-bucket-updated",
 						ManifestPath: "default-test-manifest-path-updated",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
 						Name: "test-local",
 						Path: "test-local-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
 						Name: "default",
 						Path: "default-local-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					GCP: &configapi.GCPDiscovery{
@@ -966,7 +934,6 @@ func TestSetCLIDiscoverySourceMultiTypes(t *testing.T) {
 						Bucket:       "default-test-bucket-updated2",
 						ManifestPath: "default-test-manifest-path-updated2",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					GCP: &configapi.GCPDiscovery{
@@ -974,21 +941,18 @@ func TestSetCLIDiscoverySourceMultiTypes(t *testing.T) {
 						Bucket:       "test-bucket-updated",
 						ManifestPath: "test-manifest-path-updated",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
 						Name: "default-local",
 						Path: "default-local-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					Local: &configapi.LocalDiscovery{
 						Name: "test-gcp1",
 						Path: "default-local-path",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 				{
 					GCP: &configapi.GCPDiscovery{
@@ -996,7 +960,6 @@ func TestSetCLIDiscoverySourceMultiTypes(t *testing.T) {
 						Bucket:       "test-bucket-updated",
 						ManifestPath: "test-manifest-path-updated",
 					},
-					ContextType: configapi.CtxTypeTMC,
 				},
 			},
 			totalSources: 5,
