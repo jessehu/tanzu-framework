@@ -333,6 +333,7 @@ func removeCurrentServer(node *yaml.Node, name string) error {
 	return nil
 }
 
+//nolint:dupl
 func removeServer(node *yaml.Node, name string) error {
 	// find servers node
 	keys := []nodeutils.Key{
@@ -340,7 +341,7 @@ func removeServer(node *yaml.Node, name string) error {
 	}
 	serversNode := nodeutils.FindNode(node.Content[0], nodeutils.WithKeys(keys))
 	if serversNode == nil {
-		return nodeutils.ErrNodeNotFound
+		return nil
 	}
 	var servers []*yaml.Node
 	for _, serverNode := range serversNode.Content {
