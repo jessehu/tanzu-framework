@@ -16,13 +16,13 @@ type KindCluster interface {
 // kindCluster implements ClusterOps interface
 type kindCluster struct {
 	CmdOps
-	ContainerRuntime
+	Docker
 }
 
-func NewKindCluster(runtime ContainerRuntime) KindCluster {
+func NewKindCluster(docker Docker) KindCluster {
 	return &kindCluster{
-		CmdOps:           NewCmdOps(),
-		ContainerRuntime: runtime,
+		CmdOps: NewCmdOps(),
+		Docker: docker,
 	}
 }
 
