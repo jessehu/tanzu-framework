@@ -799,6 +799,9 @@ OCI_EXTERNAL_CONTROL_PLANE_EP_SUBNET_ID:
 OCI_EXTERNAL_CONTROL_PLANE_SUBNET_ID:
 OCI_EXTERNAL_WORKER_SUBNET_ID:
 
+#! compliance
+APISERVER_EVENT_RATE_LIMIT_CONF_BASE64:
+
 #! ---------------------------------------------------------------------
 #! BoM file processing, internal use only
 #! ---------------------------------------------------------------------
