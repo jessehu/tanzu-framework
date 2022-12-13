@@ -36,10 +36,11 @@ import (
 	"github.com/vmware-tanzu/tanzu-framework/tkg/avi"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/aws"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/azure"
-	"github.com/vmware-tanzu/tanzu-framework/tkg/oracle"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/clusterclient"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/constants"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/log"
+	"github.com/vmware-tanzu/tanzu-framework/tkg/oracle"
+	"github.com/vmware-tanzu/tanzu-framework/tkg/ssh"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/tkgconfigbom"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/tkgconfighelper"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/tkgconfigproviders"
@@ -931,7 +932,8 @@ func (c *TkgClient) verifyDatastoreOrStoragePolicySet() error {
 // ValidateVSphereVersion validates vsphere version
 func ValidateVSphereVersion(vcClient vc.Client) *ValidationError {
 	version, build, err := vcClient.GetVSphereVersion()
-	if err != nil {return NewValidationError(ValidationErrorCode, errors.Wrap(err, "unable to verify vSphere version").Error())
+	if err != nil {
+		return NewValidationError(ValidationErrorCode, errors.Wrap(err, "unable to verify vSphere version").Error())
 	}
 
 	if strings.HasPrefix(version, "7.") {
@@ -1504,7 +1506,7 @@ func (c *TkgClient) EncodeAWSCredentialsAndGetClient(clusterClient clusterclient
 
 // EncodeOracleCredentials encodes oracle credentials from the default configuration provider.
 // This follows the same principal as the AWS Credential Provider chain
-func (c *TkgClient) EncodeOracleCredentials() (error) {
+func (c *TkgClient) EncodeOracleCredentials() error {
 	client, err := oracle.New()
 	if err != nil {
 		return err
@@ -1550,15 +1552,29 @@ func (c *TkgClient) EncodeOracleCredentials() (error) {
 		return err
 	}
 	keyPem := pem.EncodeToMemory(&pem.Block{
-		Type: "RSA PRIVATE KEY",
+		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(key),
 	})
 
 	c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleCredentialsKeyB64, base64.StdEncoding.EncodeToString(keyPem))
 
+	sshKey, err := c.TKGConfigReaderWriter().Get(constants.ConfigVariableOracleSSHPublicKeyB64)
+	if err != nil && sshKey != "" {
+		return nil
+	}
+
+	sshClient, err := ssh.New()
+	if err != nil {
+		return err
+	}
+	sshKeys, err := sshClient.KeysAsString()
+	if err != nil {
+		return err
+	}
+	c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleSSHPublicKeyB64, base64.StdEncoding.EncodeToString([]byte(sshKeys)))
+
 	return nil
 }
-
 
 // ConfigureAndValidateHTTPProxyConfiguration configures and validates http proxy configuration
 func (c *TkgClient) ConfigureAndValidateHTTPProxyConfiguration(infrastructureName string) error {
