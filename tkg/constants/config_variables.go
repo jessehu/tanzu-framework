@@ -57,6 +57,13 @@ const (
 	ConfigVariableAWSSecurityGroupLb           = "AWS_SECURITY_GROUP_LB"
 	ConfigVariableAWSControlplaneOsDiskSizeGib = "AWS_CONTROL_PLANE_OS_DISK_SIZE_GIB"
 
+	ConfigVariableOracleTenancyIDB64              = "ORACLE_TENANCY_ID_B64"
+	ConfigVariableOracleCredentialsFingerprintB64 = "ORACLE_CREDENTIALS_FINGERPRINT_B64"
+	ConfigVariableOracleCredentialsKeyB64         = "ORACLE_CREDENTIALS_KEY_B64"
+	ConfigVariableOracleUserIDB64                 = "ORACLE_USER_ID_B64"
+	ConfigVariableOracleRegionB64                 = "ORACLE_REGION_B64"
+	ConfigVariableOracleUseInstancePrincipalB64   = "ORACLE_USE_INSTANCE_PRINCIPAL_B64"
+
 	ConfigVariableVsphereAz0                         = "VSPHERE_AZ_0"
 	ConfigVariableVsphereAz1                         = "VSPHERE_AZ_1"
 	ConfigVariableVsphereAz2                         = "VSPHERE_AZ_2"

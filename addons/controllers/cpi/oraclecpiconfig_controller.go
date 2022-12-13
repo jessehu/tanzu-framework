@@ -119,7 +119,7 @@ type oracleSubnetIds struct {
 type oracleClusterClassNetworkSpec struct {
 	VCNID                   string                        `json:"vcnID,omitempty"`
 	NetworkSecurityGroupIDs oracleNetworkSecurityGroupIDs `json:"networkSecurityGroupIDs,omitempty"`
-	SubnetsIds              oracleSubnetIds               `json:"subnets,omitempty"`
+	SubnetIDs               oracleSubnetIds               `json:"subnets,omitempty"`
 }
 
 // reconcileOracleCPIConfig reconciles OracleCPIConfig with its owner cluster

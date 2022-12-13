@@ -3052,13 +3052,13 @@ metadata:
 ---
 apiVersion: v1
 data:
-  fingerprint: ${OCI_CREDENTIALS_FINGERPRINT_B64:=""}
-  key: ${OCI_CREDENTIALS_KEY_B64:=""}
-  passphrase: ${OCI_CREDENTIALS_PASSPHRASE_B64:=""}
-  region: ${OCI_REGION_B64:=""}
-  tenancy: ${OCI_TENANCY_ID_B64:=""}
-  useInstancePrincipal: ${USE_INSTANCE_PRINCIPAL_B64:="ZmFsc2U="}
-  user: ${OCI_USER_ID_B64:=""}
+  fingerprint: ${ORACLE_CREDENTIALS_FINGERPRINT_B64:=""}
+  key: ${ORACLE_CREDENTIALS_KEY_B64:=""}
+  passphrase: ${ORACLE_CREDENTIALS_PASSPHRASE_B64:=""}
+  region: ${ORACLE_REGION_B64:=""}
+  tenancy: ${ORACLE_TENANCY_ID_B64:=""}
+  useInstancePrincipal: ${ORACLE_USE_INSTANCE_PRINCIPAL_B64:="ZmFsc2U="}
+  user: ${ORACLE_USER_ID_B64:=""}
 kind: Secret
 metadata:
   labels:

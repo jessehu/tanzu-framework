@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
+	"encoding/pem"
 	"fmt"
 	"net"
 	"net/url"
@@ -29,10 +30,13 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	netutils "k8s.io/utils/net"
 
+	"crypto/x509"
+
 	"github.com/vmware-tanzu/tanzu-framework/cli/runtime/config"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/avi"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/aws"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/azure"
+	"github.com/vmware-tanzu/tanzu-framework/tkg/oracle"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/clusterclient"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/constants"
 	"github.com/vmware-tanzu/tanzu-framework/tkg/log"
@@ -275,7 +279,7 @@ func (c *TkgClient) ConfigureAndValidateAzureConfig(tkrVersion string, nodeSizes
 // ConfigureAndValidateOracleConfig configures and validates oracle configurationn
 func (c *TkgClient) ConfigureAndValidateOracleConfig(tkrVersion string, nodeSizes NodeSizeOptions, skipValidation bool) error {
 	c.SetProviderType(OracleProviderName)
-
+	c.EncodeOracleCredentials()
 	return nil
 }
 
@@ -927,8 +931,7 @@ func (c *TkgClient) verifyDatastoreOrStoragePolicySet() error {
 // ValidateVSphereVersion validates vsphere version
 func ValidateVSphereVersion(vcClient vc.Client) *ValidationError {
 	version, build, err := vcClient.GetVSphereVersion()
-	if err != nil {
-		return NewValidationError(ValidationErrorCode, errors.Wrap(err, "unable to verify vSphere version").Error())
+	if err != nil {return NewValidationError(ValidationErrorCode, errors.Wrap(err, "unable to verify vSphere version").Error())
 	}
 
 	if strings.HasPrefix(version, "7.") {
@@ -1498,6 +1501,64 @@ func (c *TkgClient) EncodeAWSCredentialsAndGetClient(clusterClient clusterclient
 
 	return awsClient, nil
 }
+
+// EncodeOracleCredentials encodes oracle credentials from the default configuration provider.
+// This follows the same principal as the AWS Credential Provider chain
+func (c *TkgClient) EncodeOracleCredentials() (error) {
+	client, err := oracle.New()
+	if err != nil {
+		return err
+	}
+
+	creds := client.Credentials()
+
+	isUsingInstancePrincipal, err := client.IsUsingInstancePrincipal()
+	if err != nil {
+		return err
+	}
+	if isUsingInstancePrincipal {
+		c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleUseInstancePrincipalB64, base64.StdEncoding.EncodeToString([]byte("true")))
+		return nil
+	}
+
+	tenancyOCID, err := creds.TenancyOCID()
+	if err != nil {
+		return err
+	}
+	c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleTenancyIDB64, base64.StdEncoding.EncodeToString([]byte(tenancyOCID)))
+
+	keyFingerprint, err := creds.KeyFingerprint()
+	if err != nil {
+		return err
+	}
+	c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleCredentialsFingerprintB64, base64.StdEncoding.EncodeToString([]byte(keyFingerprint)))
+
+	userOCID, err := creds.UserOCID()
+	if err != nil {
+		return err
+	}
+	c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleUserIDB64, base64.StdEncoding.EncodeToString([]byte(userOCID)))
+
+	region, err := client.Region()
+	if err != nil {
+		return err
+	}
+	c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleRegionB64, base64.StdEncoding.EncodeToString([]byte(region)))
+
+	key, err := creds.PrivateRSAKey()
+	if err != nil {
+		return err
+	}
+	keyPem := pem.EncodeToMemory(&pem.Block{
+		Type: "RSA PRIVATE KEY",
+		Bytes: x509.MarshalPKCS1PrivateKey(key),
+	})
+
+	c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleCredentialsKeyB64, base64.StdEncoding.EncodeToString(keyPem))
+
+	return nil
+}
+
 
 // ConfigureAndValidateHTTPProxyConfiguration configures and validates http proxy configuration
 func (c *TkgClient) ConfigureAndValidateHTTPProxyConfiguration(infrastructureName string) error {
