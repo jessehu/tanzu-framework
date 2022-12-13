@@ -125,23 +125,30 @@ type AkoOperatorPackageValues struct {
 	AkoOperatorConfig  AkoOperatorConfig `yaml:"config,omitempty"`
 }
 
+// NodeNetwork
+type NodeNetwork struct {
+	NetworkName string   `yaml:"networkName,omitempty"`
+	Cidrs       []string `yaml:"cidrs,omitempty"`
+}
+
 // AkoOperatorConfig
 type AkoOperatorConfig struct {
-	AviControllerAddress                           string `yaml:"avi_controller,omitempty"`
-	AviControllerVersion                           string `yaml:"avi_controller_version,omitempty"`
-	AviControllerUsername                          string `yaml:"avi_username,omitempty"`
-	AviControllerPassword                          string `yaml:"avi_password,omitempty"`
-	AviControllerCA                                string `yaml:"avi_ca_data_b64,omitempty"`
-	AviCloudName                                   string `yaml:"avi_cloud_name,omitempty"`
-	AviServiceEngineGroup                          string `yaml:"avi_service_engine_group,omitempty"`
-	AviManagementClusterServiceEngineGroup         string `yaml:"avi_management_cluster_service_engine_group,omitempty"`
-	AviDataPlaneNetworkName                        string `yaml:"avi_data_network,omitempty"`
-	AviDataPlaneNetworkCIDR                        string `yaml:"avi_data_network_cidr,omitempty"`
-	AviControlPlaneNetworkName                     string `yaml:"avi_control_plane_network,omitempty"`
-	AviControlPlaneNetworkCIDR                     string `yaml:"avi_control_plane_network_cidr,omitempty"`
-	AviManagementClusterDataPlaneNetworkName       string `yaml:"avi_management_cluster_vip_network_name,omitempty"`
-	AviManagementClusterDataPlaneNetworkCIDR       string `yaml:"avi_management_cluster_vip_network_cidr,omitempty"`
-	AviManagementClusterControlPlaneVipNetworkName string `yaml:"avi_management_cluster_control_plane_vip_network_name,omitempty"`
-	AviManagementClusterControlPlaneVipNetworkCIDR string `yaml:"avi_management_cluster_control_plane_vip_network_cidr,omitempty"`
-	AviControlPlaneHaProvider                      bool   `yaml:"avi_control_plane_ha_provider,omitempty"`
+	AviControllerAddress                           string        `yaml:"avi_controller,omitempty"`
+	AviControllerVersion                           string        `yaml:"avi_controller_version,omitempty"`
+	AviControllerUsername                          string        `yaml:"avi_username,omitempty"`
+	AviControllerPassword                          string        `yaml:"avi_password,omitempty"`
+	AviControllerCA                                string        `yaml:"avi_ca_data_b64,omitempty"`
+	AviCloudName                                   string        `yaml:"avi_cloud_name,omitempty"`
+	AviServiceEngineGroup                          string        `yaml:"avi_service_engine_group,omitempty"`
+	AviManagementClusterServiceEngineGroup         string        `yaml:"avi_management_cluster_service_engine_group,omitempty"`
+	AviDataPlaneNetworkName                        string        `yaml:"avi_data_network,omitempty"`
+	AviDataPlaneNetworkCIDR                        string        `yaml:"avi_data_network_cidr,omitempty"`
+	AviControlPlaneNetworkName                     string        `yaml:"avi_control_plane_network,omitempty"`
+	AviControlPlaneNetworkCIDR                     string        `yaml:"avi_control_plane_network_cidr,omitempty"`
+	AviManagementClusterDataPlaneNetworkName       string        `yaml:"avi_management_cluster_vip_network_name,omitempty"`
+	AviManagementClusterDataPlaneNetworkCIDR       string        `yaml:"avi_management_cluster_vip_network_cidr,omitempty"`
+	AviManagementClusterControlPlaneVipNetworkName string        `yaml:"avi_management_cluster_control_plane_vip_network_name,omitempty"`
+	AviManagementClusterControlPlaneVipNetworkCIDR string        `yaml:"avi_management_cluster_control_plane_vip_network_cidr,omitempty"`
+	AviControlPlaneHaProvider                      bool          `yaml:"avi_control_plane_ha_provider,omitempty"`
+	AviIngressNodeNetworkList                      []NodeNetwork `yaml:"avi_ingress_node_network_list,omitempty"`
 }
