@@ -1565,11 +1565,13 @@ func (c *TkgClient) EncodeOracleCredentials() error {
 
 	sshClient, err := ssh.New()
 	if err != nil {
-		return err
+		// skip
+		return nil
 	}
 	sshKeys, err := sshClient.KeysAsString()
 	if err != nil {
-		return err
+		// skip
+		return nil
 	}
 	c.TKGConfigReaderWriter().Set(constants.ConfigVariableOracleSSHPublicKeyB64, base64.StdEncoding.EncodeToString([]byte(sshKeys)))
 

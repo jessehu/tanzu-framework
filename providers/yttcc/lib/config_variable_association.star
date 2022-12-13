@@ -300,16 +300,22 @@ return {
 "ANTREA_TRACEFLOW": ["vsphere", "aws", "azure", "docker", "oci"],
 "ANTREA_DISABLE_UDP_TUNNEL_OFFLOAD": ["vsphere", "aws", "azure", "docker", "oci"],
 
-"OCI_IMAGE_ID": ["oci"],
-"OCI_REGION": ["oci"],
-"OCI_COMPARTMENT_ID": ["oci"],
-"OCI_NODE_MACHINE_TYPE": ["oci"],
-"OCI_NODE_MACHINE_TYPE_OCPUS": ["oci"],
-"OCI_SSH_KEY": ["oci"],
-"OCI_NODE_PV_TRANSIT_ENCRYPTION": ["oci"],
-"OCI_CONTROL_PLANE_MACHINE_TYPE": ["oci"],
-"OCI_CONTROL_PLANE_MACHINE_TYPE_OCPUS": ["oci"],
-"OCI_CONTROL_PLANE_PV_TRANSIT_ENCRYPTION": ["oci"],
+# "OCI_COMPARTMENT_ID": ["oci"],
+# "OCI_CONTROL_PLANE_ENDPOINT_NSG_ID": ["oci"],
+# "OCI_CONTROL_PLANE_ENDPOINT_SUBNET_ID": ["oci"],
+# "OCI_CONTROL_PLANE_MACHINE_OCPUS": ["oci"],
+# "OCI_CONTROL_PLANE_MACHINE_SHAPE": ["oci"],
+# "OCI_CONTROL_PLANE_NSG_ID": ["oci"],
+# "OCI_CONTROL_PLANE_SUBNET_ID": ["oci"],
+# "OCI_PRIVATE_SERVICES_SUBNET_ID": ["oci"],
+# "OCI_PUBLIC_SERVICES_SUBNET_ID": ["oci"],
+# "OCI_REGION": ["oci"],
+# "OCI_SSH_PUBLIC_KEY_B64": ["oci"],
+# "OCI_VCN_ID": ["oci"],
+# "OCI_VOLUME_IN_TRANSIT_ENCRYPTION_ENABLED": ["oci"],
+# "OCI_WORKER_MACHINE_OCPUS": ["oci"],
+# "OCI_WORKER_MACHINE_SHAPE": ["oci"],
+# "OCI_WORKERS_NSG_ID": ["oci"],
 
 "KUBEVIP_LOADBALANCER_ENABLE": ["vsphere"],
 "KUBEVIP_LOADBALANCER_CIDRS": ["vsphere"],
@@ -427,6 +433,11 @@ def get_cluster_variables():
         vars["TKR_DATA"] = data.values["TKR_DATA"]
     end
 
+    return vars
+end
+
+def get_oci_vars():
+    vars = get_cluster_variables()
     return vars
 end
 
@@ -971,62 +982,3 @@ def get_vsphere_vars():
 
     return vars
 end
-
-def get_oci_vars():
-    simpleMapping = {}
-    simpleMapping["OCI_COMPARTMENT_ID"] = "compartmentId"
-    simpleMapping["OCI_SSH_KEY"] = "sshKey"
-    simpleMapping["OCI_NODE_MACHINE_TYPE"] = "nodeMachineShape"
-    simpleMapping["OCI_NODE_MACHINE_TYPE_OCPUS"] = "nodeMachineOcpus"
-    simpleMapping["OCI_NODE_PV_TRANSIT_ENCRYPTION"] = "nodePvTransitEncryption"
-    simpleMapping["OCI_CONTROL_PLANE_MACHINE_TYPE"] = "controlPlaneMachineShape"
-    simpleMapping["OCI_CONTROL_PLANE_MACHINE_TYPE_OCPUS"] = "controlPlaneMachineOcpus"
-    simpleMapping["OCI_CONTROL_PLANE_PV_TRANSIT_ENCRYPTION"] = "controlPlanePvTransitEncryption"
-
-    simpleMapping["OCI_PRIVATE_SERVICE_SUBNET_ID"] = "privateServiceSubnetId"
-    simpleMapping["OCI_EXTERNAL_VCN_ID"] = "externalVCNId"
-    simpleMapping["OCI_EXTERNAL_CONTROL_PLANE_EP_NSG_ID"] = "externalControlPlaneEndpointNSGId"
-    simpleMapping["OCI_EXTERNAL_CONTROL_PLANE_NSG_ID"] = "externalControlPlaneNSGId"
-    simpleMapping["OCI_EXTERNAL_WORKER_NSG_ID"] = "externalWorkerNSGId"
-    simpleMapping["OCI_EXTERNAL_CONTROL_PLANE_EP_SUBNET_ID"] = "externalControlPlaneEndpointSubnetId"
-    simpleMapping["OCI_EXTERNAL_CONTROL_PLANE_SUBNET_ID"] = "externalControlPlaneSubnetId"
-    simpleMapping["OCI_EXTERNAL_WORKER_SUBNET_ID"] = "externalWorkerSubnetId"
-
-    vars = get_cluster_variables()
-
-    if data.values["ETCD_EXTRA_ARGS"] != None:
-        vars["etcdExtraArgs"] = get_extra_args_map_from_string(data.values["ETCD_EXTRA_ARGS"])
-    end
-    if data.values["APISERVER_EXTRA_ARGS"] != None:
-        vars["apiServerExtraArgs"] = get_extra_args_map_from_string(data.values["APISERVER_EXTRA_ARGS"])
-    end
-    if data.values["KUBE_SCHEDULER_EXTRA_ARGS"] != None:
-        vars["kubeSchedulerExtraArgs"] = get_extra_args_map_from_string(data.values["KUBE_SCHEDULER_EXTRA_ARGS"])
-    end
-    if data.values["KUBE_CONTROLLER_MANAGER_EXTRA_ARGS"] != None:
-        vars["kubeControllerManagerExtraArgs"] = get_extra_args_map_from_string(data.values["KUBE_CONTROLLER_MANAGER_EXTRA_ARGS"])
-    end
-    if data.values["CONTROLPLANE_KUBELET_EXTRA_ARGS"] != None:
-        vars["controlPlaneKubeletExtraArgs"] = get_extra_args_map_from_string(data.values["CONTROLPLANE_KUBELET_EXTRA_ARGS"])
-    end
-    if data.values["WORKER_KUBELET_EXTRA_ARGS"] != None:
-        vars["workerKubeletExtraArgs"] = get_extra_args_map_from_string(data.values["WORKER_KUBELET_EXTRA_ARGS"])
-    end
-
-    for key in simpleMapping:
-        if data.values[key] != None:
-            vars[simpleMapping[key]] = data.values[key]
-        end
-    end
-    return vars
-end
-
-oci_var_keys = ["compartmentId", "sshKey", "nodeMachineShape", "nodeMachineOcpus",
-        "privateServiceSubnetId", "externalVCNId",
-        "externalControlPlaneEndpointNSGId", "externalControlPlaneNSGId", "externalWorkerNSGId",
-        "externalControlPlaneEndpointSubnetId", "externalControlPlaneSubnetId", "externalWorkerSubnetId",
-        "nodePvTransitEncryption", "controlPlaneMachineShape", "controlPlaneMachineOcpus",
-        "controlPlanePvTransitEncryption",
-        "imageRepository", "trust", "auditLogging", "cni", "TKR_DATA",
-        "controlPlaneCertificateRotation", "podSecurityStandard", "workerKubeletExtraArgs", "controlPlaneKubeletExtraArgs",
-        "kubeControllerManagerExtraArgs", "kubeSchedulerExtraArgs", "apiServerExtraArgs", "etcdExtraArgs"]

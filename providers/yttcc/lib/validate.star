@@ -31,6 +31,19 @@ required_variable_list_tkgs = [
   "WORKER_VM_CLASS",
   "NODE_POOL_0_NAME"]
 
+required_variable_list_oci = [
+  "OCI_COMPARTMENT_ID",
+  "OCI_CONTROL_PLANE_ENDPOINT_NSG_ID",
+  "OCI_CONTROL_PLANE_ENDPOINT_SUBNET_ID",
+  "OCI_CONTROL_PLANE_NSG_ID",
+  "OCI_CONTROL_PLANE_SUBNET_ID",
+  "OCI_PRIVATE_SERVICES_SUBNET_ID",
+  "OCI_REGION",
+  "OCI_SSH_PUBLIC_KEY_B64",
+  "OCI_VCN_ID",
+  "OCI_WORKERS_NSG_ID"
+  ]
+
 def validate_configuration(provider):
   #! skip validation when only employing the template to generate
   #! addon resources (which is doable without a complete set of 
@@ -55,7 +68,9 @@ def validate_configuration(provider):
     flag_missing_variable_error(required_variable_list_azure)
   elif provider == "tkgs":
     flag_missing_variable_error(required_variable_list_tkgs)
-  end
+  elif provider == "oci":
+    flag_missing_variable_error(required_variable_list_oci)    
+  end  
 end
 
 def flag_missing_variable_error(variables_list):

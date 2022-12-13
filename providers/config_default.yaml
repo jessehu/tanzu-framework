@@ -777,24 +777,23 @@ DOCKER_CLUSTER_CLASS_VERSION: v1.0.0
 #! ---------------------------------------------------------------------
 #! Settings for OCI infrastructure provider
 #! ---------------------------------------------------------------------
-OCI_CONTROL_PLANE_MACHINE_SHAPE: "VM.Standard.E4.Flex"
-OCI_CONTROL_PLANE_MACHINE_OCPUS: "1"
-OCI_WORKER_MACHINE_SHAPE: "VM.Standard.E4.Flex"
-OCI_WORKER_MACHINE_OCPUS: "1"
-OCI_VOLUME_IN_TRANSIT_ENCRYPTION_ENABLED: true
-OCI_IMAGE_ID:
-OCI_REGION:
-OCI_COMPARTMENT_ID:
-OCI_SSH_KEY:
 
-#! Settings to use externally managed network infrastructure
-OCI_VCN_ID:
+OCI_COMPARTMENT_ID:
 OCI_CONTROL_PLANE_ENDPOINT_NSG_ID:
+OCI_CONTROL_PLANE_ENDPOINT_SUBNET_ID:
+OCI_CONTROL_PLANE_MACHINE_OCPUS: "1"
+OCI_CONTROL_PLANE_MACHINE_SHAPE: "VM.Standard.E4.Flex"
 OCI_CONTROL_PLANE_NSG_ID:
-OCI_WORKERS_NSG_ID:
 OCI_CONTROL_PLANE_SUBNET_ID:
 OCI_PRIVATE_SERVICES_SUBNET_ID:
 OCI_PUBLIC_SERVICES_SUBNET_ID:
+OCI_REGION:
+OCI_SSH_PUBLIC_KEY_B64:
+OCI_VCN_ID:
+OCI_VOLUME_IN_TRANSIT_ENCRYPTION_ENABLED: true
+OCI_WORKER_MACHINE_OCPUS: "1"
+OCI_WORKER_MACHINE_SHAPE: "VM.Standard.E4.Flex"
+OCI_WORKERS_NSG_ID:
 
 #! ---------------------------------------------------------------------
 #! BoM file processing, internal use only
