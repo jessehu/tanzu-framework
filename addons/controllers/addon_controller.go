@@ -234,6 +234,13 @@ func (r *AddonReconciler) reconcileDelete(
 		return ctrl.Result{}, kerrors.NewAggregate(errors)
 	}
 
+	if controllerutil.ContainsFinalizer(cluster, addontypes.AddonFinalizer) {
+		err := r.removeFinalizer(ctx, cluster, cluster.DeepCopy())
+		if err != nil {
+			log.Error(err, "failed to remove finalizer from cluster")
+			return ctrl.Result{}, err
+		}
+	}
 	return ctrl.Result{}, nil
 }
 
@@ -242,6 +249,14 @@ func (r *AddonReconciler) reconcileNormal(
 	ctx context.Context,
 	log logr.Logger,
 	cluster *clusterapiv1beta1.Cluster) (ctrl.Result, error) {
+
+	if !controllerutil.ContainsFinalizer(cluster, addontypes.AddonFinalizer) {
+		err := r.addFinalizer(ctx, cluster, cluster.DeepCopy())
+		if err != nil {
+			log.Error(err, "failed to add finalizer to cluster")
+			return ctrl.Result{}, err
+		}
+	}
 
 	// Get addon secrets for the cluster
 	addonSecrets, err := util.GetAddonSecretsForCluster(ctx, r.Client, cluster)
@@ -312,6 +327,19 @@ func (r *AddonReconciler) reconcileNormal(
 	}
 
 	return result, nil
+}
+
+func (r *AddonReconciler) addFinalizer(ctx context.Context, o, deepCopy client.Object) error {
+	controllerutil.AddFinalizer(deepCopy, addontypes.AddonFinalizer)
+	return r.Client.Patch(ctx, deepCopy, client.MergeFrom(o))
+}
+
+func (r *AddonReconciler) removeFinalizer(ctx context.Context, o, deepCopy client.Object) error {
+	if controllerutil.ContainsFinalizer(deepCopy, addontypes.AddonFinalizer) {
+		controllerutil.RemoveFinalizer(deepCopy, addontypes.AddonFinalizer)
+		return r.Client.Patch(ctx, deepCopy, client.MergeFrom(o))
+	}
+	return nil
 }
 
 // reconcileNormal reconciles the addons belonging to the cluster
