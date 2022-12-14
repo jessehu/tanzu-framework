@@ -234,13 +234,12 @@ func (r *AddonReconciler) reconcileDelete(
 		return ctrl.Result{}, kerrors.NewAggregate(errors)
 	}
 
-	if controllerutil.ContainsFinalizer(cluster, addontypes.AddonFinalizer) {
-		err := r.removeFinalizer(ctx, cluster, cluster.DeepCopy())
-		if err != nil {
-			log.Error(err, "failed to remove finalizer from cluster")
-			return ctrl.Result{}, err
-		}
+	err = r.removeFinalizer(ctx, cluster, cluster.DeepCopy())
+	if err != nil {
+		log.Error(err, "failed to remove finalizer from cluster")
+		return ctrl.Result{}, err
 	}
+
 	return ctrl.Result{}, nil
 }
 
