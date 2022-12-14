@@ -7,7 +7,7 @@ replace (
 	github.com/vmware-tanzu/tanzu-framework/apis/run => ../../apis/run
 	github.com/vmware-tanzu/tanzu-framework/capabilities/client => ../client
 	github.com/vmware-tanzu/tanzu-framework/cli/runtime => ../../cli/runtime
-	sigs.k8s.io/cluster-api => sigs.k8s.io/cluster-api v1.2.7
+	sigs.k8s.io/cluster-api => sigs.k8s.io/cluster-api v1.2.8
 )
 
 require (
@@ -68,7 +68,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20220909003341-f21342109be1 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/term v0.2.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
+	golang.org/x/text v0.5.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
@@ -83,7 +83,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20220328201542-3ee0da9b0b42 // indirect
 	k8s.io/kubectl v0.24.0 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect
-	sigs.k8s.io/cluster-api v1.2.7 // indirect
+	sigs.k8s.io/cluster-api v1.2.8 // indirect
 	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
