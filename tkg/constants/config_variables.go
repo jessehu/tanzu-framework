@@ -249,7 +249,6 @@ const (
 	ConfigVariableOIDCIdentiryProviderClientSecret = "OIDC_IDENTITY_PROVIDER_CLIENT_SECRET" //nolint:gosec
 
 	// Config variables for image tags used for provider installation
-	ConfigVariableInternalKubeRBACProxyImageTag             = "KUBE_RBAC_PROXY_IMAGE_TAG"
 	ConfigVariableInternalCABPKControllerImageTag           = "CABPK_CONTROLLER_IMAGE_TAG"
 	ConfigVariableInternalCAPIControllerImageTag            = "CAPI_CONTROLLER_IMAGE_TAG"
 	ConfigVariableInternalKCPControllerImageTag             = "KCP_CONTROLLER_IMAGE_TAG"

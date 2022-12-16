@@ -130,4 +130,3 @@ func (p *pkgClient) validateRepositoryUpdate(repositoryName, repositoryImg, name
 
 	return nil
 }
-Q
