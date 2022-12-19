@@ -49,6 +49,7 @@ spec:
       schema:
         openAPIV3Schema:
           type: string
+          pattern: "ocid1\\.compartment\\.([\\w-]*)\\.([\\w-]*)\\.([\\w]{60})"
     - name: network
       required: true
       schema:
@@ -57,38 +58,50 @@ spec:
           properties:
             vcnID:
               type: string
+              pattern: "ocid1\\.vcn\\.([\\w-]+)\\.([\\w-]+)\\.([\\w]{60})"
             securityGroupIDs:
-              openAPIV3Schema:
-                type: object
-                properties:
-                  controlPlaneEndpoint:
-                    type: string
-                    required: true
-                  controlPlane:
-                    type: string
-                    required: true
-                  workers:
-                    type: string
-                    required: true
+              type: object
+              properties:
+                controlPlane:
+                  type: string
+                  pattern: &NsgRegex "ocid1\\.networksecuritygroup\\.([\\w-]+)\\.([\\w-]+)\\.([\\w]{60})"
+                controlPlaneEndpoint:
+                  type: string
+                  pattern: *NsgRegex
+                workers:
+                  type: string
+                  pattern: *NsgRegex
+              required:
+                - workers
+                - controlPlane
+                - controlPlaneEndpoint
             subnetIDs:
-              openAPIV3Schema:
-                type: object
-                properties:
-                  controlPlaneEndpoint:
-                    type: string
-                    required: true
-                  workers:
-                    type: string
-                    required: true
-                  controlPlane:
-                    type: string
-                    required: true
-                  privateServices:
-                    type: string
-                    required: true
-                  publicServices:
-                    type: string
-                    required: false
+              type: object
+              properties:
+                controlPlaneEndpoint:
+                  type: string
+                  pattern: &SubnetRegex "ocid1\\.subnet\\.([\\w-]+)\\.([\\w-]+)\\.([\\w]{60})"
+                workers:
+                  type: string
+                  pattern: *SubnetRegex
+                controlPlane:
+                  type: string
+                  pattern: *SubnetRegex
+                privateServices:
+                  type: string
+                  pattern: *SubnetRegex
+                publicServices:
+                  type: string
+                  pattern: *SubnetRegex
+              required:
+              - controlPlane
+              - controlPlaneEndpoint
+              - privateServices
+              - workers
+          required:
+          - vcnID
+          - securityGroupIDs
+          - subnetIDs
     - name: imageRepository
       required: false
       schema:
@@ -108,10 +121,11 @@ spec:
           properties:
             shape:
               type: string
+              pattern: "[A-Z]+\\.([\\w-]+)\\.([\\w-]+)(\\.([\\w-]+))?"
               default: VM.Standard.E4.Flex
             oCPUs:
               type: string
-              default: 1
+              default: "1"
     - name: workerMachineSpec
       required: false
       schema: *MachineSpec
@@ -292,7 +306,7 @@ spec:
               op: add
               path: /spec/template/spec/shapeConfig/ocpus
               valueFrom:
-                variable: controlPlaneMachineOCPUs
+                variable: controlPlaneMachineSpec.oCPUs
             - &PvTransitEncryption
               op: add
               path: "/spec/template/spec/isPvEncryptionInTransitEnabled"
@@ -307,7 +321,7 @@ spec:
               op: add
               path: "/spec/template/spec/shape"
               valueFrom:
-                variable: controlPlaneMachineShape
+                variable: controlPlaneMachineSpec.shape
             - &sshPublicKey
               op: add
               path: "/spec/template/spec/metadata/ssh_authorized_keys"
@@ -325,14 +339,14 @@ spec:
           jsonPatches:
             - <<: *OCPUsPatch
               valueFrom: #@yaml/map-key-override
-                variable: workerMachineOCPUs
+                variable: workerMachineSpec.oCPUs
             - *PvTransitEncryption
             - <<: *ImageID
               valueFrom: #@yaml/map-key-override
                 template: '{{ (index .TKR_DATA .builtin.machineDeployment.version).osImageRef.id }}'
             - <<: *MachineShape
               valueFrom: #@yaml/map-key-override
-                variable: nodeMachineShape
+                variable: workerMachineSpec.shape
             - *sshPublicKey
     - name: apiServerBindPort
       enabledIf: '{{ not (empty .apiServerPort) }}'
@@ -808,7 +822,7 @@ spec:
                   cloud-provider: external
                   {{- end }}
                   {{- if not $containProviderId }}
-                  provider-id: oci://{{ ds["id"] }}
+                  provider-id: oci://{{"{{"}} ds["id"] {{"}}"}}
                   {{- end }}
             - op: add
               path: /spec/template/spec/kubeadmConfigSpec/joinConfiguration/nodeRegistration/kubeletExtraArgs
@@ -836,7 +850,7 @@ spec:
                   cloud-provider: external
                   {{- end }}
                   {{- if not $containProviderId }}
-                  provider-id: oci://{{ ds["id"] }}
+                  provider-id: oci://{{"{{"}} ds["id"] {{"}}"}}
                   {{- end }}
     - name: workerKubeletExtraArgs
       definitions:
@@ -855,7 +869,7 @@ spec:
                   {{ $containCipherSuites := false }}
                   {{ $containCloudProvider := false }}
                   {{ $containProviderId := false }}
-                  {{- range $key, $val := .controlPlaneKubeletExtraArgs }}
+                  {{- range $key, $val := .workerKubeletExtraArgs }}
                   {{- if eq $key "tls-cipher-suites" }}
                     {{- $containCipherSuites = true }}
                   {{- end }}
@@ -874,7 +888,7 @@ spec:
                   cloud-provider: external
                   {{- end }}
                   {{- if not $containProviderId }}
-                  provider-id: oci://{{ ds["id"] }}
+                  provider-id: oci://{{"{{"}} ds["id"] {{"}}"}}
                   {{- end }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
@@ -886,9 +900,8 @@ spec:
   template:
     spec:
       networkSpec:
+        skipNetworkManagement: true
         vcn:
-          cidr: "10.0.0.0/16"
-          skipNetworkManagement: true
           subnets:
           networkSecurityGroups:
 ---
